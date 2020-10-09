@@ -25,12 +25,6 @@
         },
         "frontEndServiceTypeName": {
             "value": "sfmitestsystemfrontType"
-        },
-        "backEndServiceName": {
-            "value": "sfmitestsystem~sfmitestsystemback"
-        },
-        "backEndServiceTypeName": {
-            "value": "sfmitestsystembackType"
         }
     }
 }

@@ -52,20 +52,6 @@
         "description": "The name of the service type."
       }
     },
-    "backEndServiceName": {
-      "type": "string",
-      "defaultValue": "Service2",
-      "metadata": {
-        "description": "The name of the service resource in the format of {applicationName}~{consoleServiceName}."
-      }
-    },
-    "backEndServiceTypeName": {
-      "type": "string",
-      "defaultValue": "Service2Type",
-      "metadata": {
-        "description": "The name of the service type."
-      }
-    },
     "userAssignedIdentityName": {
       "type": "string",
       "defaultValue": "AdminUser",
@@ -137,26 +123,6 @@
       "properties": {
         "serviceKind": "Stateless",
         "serviceTypeName": "[parameters('frontEndServiceTypeName')]",
-        "instanceCount": "1",
-        "partitionDescription": {
-          "partitionScheme": "Singleton"
-        },
-        "correlationScheme": [],
-        "serviceLoadMetrics": [],
-        "servicePlacementPolicies": []
-      }
-    },
-    {
-      "apiVersion": "[variables('serviceFabricMIApiVersion')]",
-      "type": "Microsoft.ServiceFabric/clusters/applications/services",
-      "name": "[concat(parameters('clusterName'), '/', parameters('applicationName'), '/', parameters('backEndServiceName'))]",
-      "location": "[parameters('clusterLocation')]",
-      "dependsOn": [
-        "[concat('Microsoft.ServiceFabric/clusters/', parameters('clusterName'), '/applications/', parameters('applicationName'))]"
-      ],
-      "properties": {
-        "serviceKind": "Stateless",
-        "serviceTypeName": "[parameters('backEndServiceTypeName')]",
         "instanceCount": "1",
         "partitionDescription": {
           "partitionScheme": "Singleton"

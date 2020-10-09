@@ -9,23 +9,9 @@
       <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="SystemAssigned" />
     </Policies>
   </ServiceManifestImport>
-  <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="sfmitestsystembackPkg" ServiceManifestVersion="1.0.0"/>
-    <Policies>
-      <ContainerHostPolicies CodePackageRef="Code">
-        <PortBinding ContainerPort="6379" EndpointRef="sfmitestsystembackTypeEndpoint"/>
-      </ContainerHostPolicies>
-      <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="SystemAssigned" />
-    </Policies>
-  </ServiceManifestImport>
   <DefaultServices>
     <Service Name="sfmitestsystemfront">
       <StatelessService ServiceTypeName="sfmitestsystemfrontType" InstanceCount="1">
-        <SingletonPartition/>
-      </StatelessService>
-    </Service>
-    <Service Name="sfmitestsystemback" ServiceDnsName="redisbackend.testapp">
-      <StatelessService ServiceTypeName="sfmitestsystembackType" InstanceCount="1">
         <SingletonPartition/>
       </StatelessService>
     </Service>

@@ -9,23 +9,9 @@
       <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="AdminUser" />
     </Policies>
   </ServiceManifestImport>
-  <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="sfmitestuserbackPkg" ServiceManifestVersion="1.0.0"/>
-    <Policies>
-      <ContainerHostPolicies CodePackageRef="Code">
-        <PortBinding ContainerPort="6379" EndpointRef="sfmitestuserbackTypeEndpoint"/>
-      </ContainerHostPolicies>
-      <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="AdminUser" />
-    </Policies>
-  </ServiceManifestImport>
   <DefaultServices>
     <Service Name="sfmitestuserfront">
       <StatelessService ServiceTypeName="sfmitestuserfrontType" InstanceCount="1">
-        <SingletonPartition/>
-      </StatelessService>
-    </Service>
-    <Service Name="sfmitestuserback" ServiceDnsName="redisbackend.testapp">
-      <StatelessService ServiceTypeName="sfmitestuserbackType" InstanceCount="1">
         <SingletonPartition/>
       </StatelessService>
     </Service>

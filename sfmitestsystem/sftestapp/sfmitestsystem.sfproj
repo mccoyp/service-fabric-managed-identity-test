@@ -29,8 +29,6 @@
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationPackageRoot\sfmitestsystembackPkg\Config\Settings.xml" />
-    <Content Include="ApplicationPackageRoot\sfmitestsystembackPkg\ServiceManifest.xml" />
     <Content Include="ApplicationPackageRoot\sfmitestsystemfrontPkg\Config\Settings.xml" />
     <Content Include="ApplicationPackageRoot\sfmitestsystemfrontPkg\ServiceManifest.xml" />
     <Content Include="packages.config" />

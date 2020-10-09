@@ -26,12 +26,6 @@
         "frontEndServiceTypeName": {
             "value": "sfmitestuserfrontType"
         },
-        "backEndServiceName": {
-            "value": "sfmitestuser~sfmitestuserback"
-        },
-        "backEndServiceTypeName": {
-            "value": "sfmitestuserbackType"
-        },
         "userAssignedIdentityName": {
             "value": "AdminUser"
         }
