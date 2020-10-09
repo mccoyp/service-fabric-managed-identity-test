@@ -10,7 +10,7 @@
   <CodePackage Name="code" Version="1.0.0">
     <EntryPoint>
       <ContainerHost>
-        <ImageName>{repository}/sfmitestuser</ImageName>
+        <ImageName>{account name}/sfmitestuser</ImageName>
         <Commands></Commands>
       </ContainerHost>
     </EntryPoint>
