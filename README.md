@@ -100,7 +100,7 @@ To use the provided template:
 
 1. Open `ResourceManagement/cluster.parameters.json` and complete the fields `clusterLocation`, `adminUserName`, `adminPassword`, `sourceVaultValue`, `certificateUrlValue`, and `certificateThumbprint`. Field descriptions will describe how they should be completed.
 2. In `ResourceManagement/cluster.parameters.json`, change all instance of `sfmi-test` to a unique name, like `<myusername>-sfmi-test`. Also, change the values of `applicationDiagnosticsStorageAccountName` and `supportLogStorageAccountName` to be similarly unique, but without hyphens. This will help ensure the deployment resource names do not conflict with the names of other public resources.
-3. Start the deployment by running from your Powershell window:
+3. Start the deployment by running from your Powershell window in the `ResourceManagement` directory:
 ```powershell
 New-AzResourceGroupDeployment -TemplateParameterFile ".\cluster.parameters.json" -TemplateFile ".\cluster.template.json" -ResourceGroupName $ResourceGroupName
 ```
@@ -121,7 +121,7 @@ To use the provided templates:
 
 1. Open `ResourceManagement/sfmitestsystem.parameters.json` and complete the fields `clusterName`, `clusterLocation`, and `applicationPackageUrl`. `clusterName` and `clusterLocation` should match the name and location of the cluster you deployed earlier in the walkthrough. `applicationPackageUrl` is the URL of the `.sfpkg` you uploaded to a storage account in the previous step. To find the URL, click on `sfmitestsystem.sfpkg` in the Portal to view its properties.
 2. Open `ResourceManagement/sfmitestuser.parameters.json` and complete the same fields, using the URL of `sfmitestuser.sfpkg` for `applicationPackageUrl`.
-3. Start the deployment by running from your Powershell window:
+3. Start the deployment by running from your Powershell window in the `ResourceManagement` directory:
 ```powershell
 New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestsystem.parameters.json" -TemplateFile ".\sfmitestsystem.template.json" -ResourceGroupName $ResourceGroupName
 New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestuser.parameters.json" -TemplateFile ".\sfmitestuser.template.json" -ResourceGroupName $ResourceGroupName
