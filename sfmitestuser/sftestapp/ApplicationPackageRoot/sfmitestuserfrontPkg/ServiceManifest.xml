@@ -10,7 +10,7 @@
   <CodePackage Name="code" Version="1.0.0">
     <EntryPoint>
       <ContainerHost>
-        <ImageName>{repository}/sftestappuser</ImageName>
+        <ImageName>{repository}/sfmitestuser</ImageName>
         <Commands></Commands>
       </ContainerHost>
     </EntryPoint>
