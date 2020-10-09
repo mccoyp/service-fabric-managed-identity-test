@@ -66,16 +66,16 @@ docker build -t sfmitestuser sfmitestuser/sfmitestuser-app
 
 To publish the images:
 
-1. Create a repository on Docker Hub, or choose an existing one.
+1. Create an account on Docker Hub, or choose an existing one.
 2. Tag your docker images. In your command prompt window, run
 ```
-docker tag sfmitestsystem <repository name>/sfmitestsystem
-docker tag sfmitestuser <repository name>/sfmitestuser
+docker tag sfmitestsystem <account name>/sfmitestsystem
+docker tag sfmitestuser <account name>/sfmitestuser
 ```
 3. Publish your docker images. In your command prompt window, run
 ```
-docker publish <repository name>/sfmitestsystem
-docker publish <repository name>/sfmitestuser
+docker publish <account name>/sfmitestsystem
+docker publish <account name>/sfmitestuser
 ```
 
 ### Package each application
@@ -83,9 +83,9 @@ docker publish <repository name>/sfmitestuser
 Your Service Fabric cluster will target each application by referencing a `.sfpkg` in a storage account you will create in the next section. First, we need to create these packages using the Visual Studio solutions provided in `sfmitestsystem` and `sfmitestuser`.
 
 1. Open `sfmitestsystem/sfmitestsystem.sln` in Visual Studio 2019.
-2. In `sfmitestsystem/ApplicationPackageRoot/sfmitestsystemfrontPkg/ServiceManifest.xml`, replace `{repository}` with your Docker Hub repository name in
+2. In `sfmitestsystem/ApplicationPackageRoot/sfmitestsystemfrontPkg/ServiceManifest.xml`, replace `{account name}` with your Docker Hub account name in
 ```xml
-<ImageName>{repository}/sfmitestsystem</ImageName>
+<ImageName>{account name}/sfmitestsystem</ImageName>
 ```
 3. [Build a package for the application](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-package-apps#configure).
 4. Go to the location of the package in File Explorer, select all items in the Debug folder, and compress them into a zip file.
