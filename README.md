@@ -8,7 +8,7 @@ The `ResourceManagement` directory contains Azure resource templates for creatin
 
 ## Environment Requirements
 
-> **Note:** All Azure resources used in the sample should be in the same region & resource group. This includes managed identity, Key Vault, Service Fabric cluster, and storage account.
+> **Note:** All Azure resources used in the sample should be in the same region & resource group. This includes a managed identity, Key Vault, Service Fabric cluster, and storage account.
 
 - This sample assumes that Visual Studio 2019 is being used in a Windows environment.
 - This sample requires access to an Azure subscription and required privileges to create resources
@@ -27,9 +27,13 @@ Select-AzSubscription -Subscription $Subscription
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 ```
 
-### Create a key vault and certificate
+### Create a key vault, certificate, and secret
 
-Using the [Azure Portal](https://azure.portal.com), create a key vault. Select "Create a resource", search for "Key Vault", and create your resource (be sure to provide your service principal with Key, Secret, & Certificate Management permissions in the "Access policy" tab). After creating the vault, create a self-signed certificate in it. You'll need to insert some of this certificate's properties into the cluster template later on.
+Using the [Azure Portal](https://azure.portal.com), create a key vault. Select "Create a resource", search for "Key Vault", and create your resource (be sure to provide your service principal with Key, Secret, & Certificate Management permissions in the "Access policy" tab). 
+
+After creating the vault, create a self-signed certificate in it. You'll need to insert some of this certificate's properties into the cluster template later on.
+
+Finally, create a secret in the key vault. It can have any name (e.g. "TestSecret") and any value (e.g. "TestValue"). This secret will just be accessed by the Service Fabric applications to verify that they can access a resource and read contents using their identities.
 
 [//]: # (If Azure Container Registry should be used instead of Docker Hub, there should also be instructions to set up a registry here.)
 
@@ -53,7 +57,16 @@ cd service-fabric-managed-identity-test
 
 ### Create and publish a Docker image for each application
 
-For this manual test, each application will be a simple Flask app. These applications are Linux container images that will be used by the Service Fabric applications you will deploy in this walkthrough. To make these images available to Service Fabric, you first need to build and publish them by using the Dockerfiles in this sample.
+For this manual test, each application will be a simple Flask app. These applications are Linux container images that will be used by the Service Fabric applications you will deploy in this walkthrough. To make these images available to Service Fabric, you need to build and publish them by using the Dockerfiles in this sample.
+
+First, you'll need to update the applications to target the correct resources.
+
+1. Open `sfmitestsystem/sfmitestsystem-app/app.py`.
+2. Complete the field `AZURE_KEY_VAULT_URL` with the vault URI of the key vault you created.
+```python
+AZURE_KEY_VAULT_URL = ""  # fill in with your key vault's vault URI (found in Properties)
+```
+3. Open `sfmitestuser/sfmitestuser-app/app.py` and repeat step 2.
 
 To build the images:
 
@@ -127,14 +140,26 @@ New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestsystem.parameter
 New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestuser.parameters.json" -TemplateFile ".\sfmitestuser.template.json" -ResourceGroupName $ResourceGroupName
 ```
 
+### Give the applications access to your key vault
+
+If the applications were accessed now, they would report an error. This is because their managed identities don't have permission to access secrets in the key vault you created. 
+
+To grant them access:
+
+1. Go to your key vault in the [Azure Portal](https://azure.portal.com).
+2. Go to the "Access Policies" tab and click the "Add Access Policy" button. Select the key, secret, & certificate management access template.
+3. Click "None selected" to select a principal. Search for the name of your cluster, and an `sfmitestsystem` entry should appear in the list -- select this principal to give `sfmitestsystem`'s system-assigned managed identity access to your vault.
+4. Click "Add" to add the access policy, and repeat steps 2 and 3. This time, search for the name of the user-assigned identity you created (`AdminUser`) for your principal. This will give `sfmitestuser`'s user-assigned managed identity access to your vault.
+5. Remember to click "Save" at the top of the access policies page to submit these changes.
+
 ### Verify that the applications work
 
-Once running on your cluster, the applications should each perform the same task: requesting and verifying the contents of a Key Vault access token. One uses a system-assigned managed identity to do so, while the other uses a user-assigned managed identity. To verify that they have each done their job correctly, you can access the applications' front-end web endpoints in a browser or by using [Curl](https://curl.haxx.se/docs/httpscripting.html). The applications will have the same URL but can be accessed through different ports: port 80 for the system-assigned identity application, and port 443 for the user-assigned identity application.
+Once running on your cluster, the applications should each perform the same task: using a `ManagedIdentityCredential` to view the properties of your key vault's secret. One uses a system-assigned managed identity to do so, while the other uses a user-assigned managed identity. To verify that they have each done their job correctly, you can access the applications' front-end web endpoints in a browser or by using [Curl](https://curl.haxx.se/docs/httpscripting.html). The applications will have the same URL but can be accessed through different ports: port 80 for the system-assigned identity application, and port 443 for the user-assigned identity application.
 
 Verify in a browser:
 
 1. Navigate to `http://<cluster name>.<cluster location>.cloudapp.azure.com:<port>`. For example, to access the application using system-assigned managed identity in a cluster named `sfmi-test` in `westus2`, you would navigate to `http://sfmi-test.westus2.cloudapp.azure.com:80`.
-2. If the application is running successfully, the page will read `Token request succeeded`. The application will otherwise indicate if it wasn't able to access necessary managed identity resources or if the token it received is invalid.
+2. If the application is running successfully, the page will read `Secret fetching succeeded`. The application will otherwise throw an error if it couldn't access your key vault's secret.
 
 Verify with Curl:
 
@@ -142,4 +167,4 @@ Verify with Curl:
 ```
 curl http://<cluster name>.<cluster location>.cloudapp.azure.com:<port>
 ```
-2. If the application is running successfully, the console output will read `Token request succeeded`. The application will otherwise indicate if it wasn't able to access necessary managed identity resources or if the token it received is invalid.
+2. If the application is running successfully, the the page will read `Secret fetching succeeded`. The application will otherwise throw an error if it couldn't access your key vault's secret.
