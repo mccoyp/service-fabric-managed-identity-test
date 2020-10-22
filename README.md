@@ -87,8 +87,8 @@ docker tag sfmitestuser <account name>/sfmitestuser
 ```
 3. Publish your docker images. In your command prompt window, run
 ```
-docker publish <account name>/sfmitestsystem
-docker publish <account name>/sfmitestuser
+docker push <account name>/sfmitestsystem
+docker push <account name>/sfmitestuser
 ```
 
 ### Package each application
