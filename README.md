@@ -29,7 +29,7 @@ New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 ### Create a key vault, certificate, and secret
 
-Using the [Azure Portal](https://azure.portal.com), create a key vault. Select "Create a resource", search for "Key Vault", and create your resource (be sure to provide your service principal with Key, Secret, & Certificate Management permissions in the "Access policy" tab). 
+Using the [Azure Portal](https://azure.portal.com), create a key vault. Select "Create a resource", search for "Key Vault", and create your resource. Be sure to enable access to Azure Virtual Machines for deployment as well as Azure Resource Manager for template deployment. 
 
 After creating the vault, create a self-signed certificate in it. You'll need to insert some of this certificate's properties into the cluster template later on.
 
