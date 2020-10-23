@@ -2,16 +2,16 @@
 
 Setup for a Service Fabric cluster and two apps, used for testing managed identity using Azure.Identity.
 
-`sfmitestsystem` and `sfmitestuser` are mock applications that use Azure.Identity's ServiceFabricCredential to request and verify Key Vault access tokens. The former application uses a system-assigned managed identity to do so, and the latter application uses a user-assigned managed identity.
+`sfmitestsystem` and `sfmitestuser` are mock applications that use Azure.Identity's `ServiceFabricCredential` to request and verify Key Vault access tokens. The former application uses a system-assigned managed identity to do so, and the latter application uses a user-assigned managed identity.
 
 The `ResourceManagement` directory contains Azure resource templates for creating a Service Fabric cluster to host these applications as well as the application templates.
 
 ## Environment Requirements
 
-> **Note:** All Azure resources used in the sample should be in the same region & resource group. This includes a managed identity, Key Vault, Service Fabric cluster, and storage account.
+> **Note:** All Azure resources used in the sample should be in the same region & resource group. This includes a managed identity, Key Vault, Service Fabric cluster, Azure Container Registry, and storage account.
 
 - This sample assumes that Visual Studio 2019 is being used in a Windows environment.
-- This sample requires access to an Azure subscription and required privileges to create resources
+- This sample requires access to an Azure subscription and required privileges to create resources.
 - [Powershell and the Az library are needed to run the deployments in the sample.](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 - [Azure CLI is used to deploy some resources.](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)
 - Docker is needed to build and push the sample containerized service. Docker should be using Linux containers for building the application images, but it should be using Windows containers when packaging the Service Fabric applications in Visual Studio.
@@ -22,7 +22,7 @@ The `ResourceManagement` directory contains Azure resource templates for creatin
 
 From a command prompt window, run
 ```
-az group create -n $RESOURCE_GROUP --location westus2
+az group create -n $RESOURCE_GROUP --location $LOCATION
 ```
 
 ### Create a user-assigned managed identity
@@ -94,8 +94,8 @@ docker build --no-cache -t $ACR_NAME.azurecr.io/sfmitestuser sfmitestuser/sfmite
 ```
 4. Publish the images:
 ```
-docker publish $ACR_NAME.azurecr.io/sfmitestsystem
-docker publish $ACR_NAME.azurecr.io/sfmitestuser
+docker push $ACR_NAME.azurecr.io/sfmitestsystem
+docker push $ACR_NAME.azurecr.io/sfmitestuser
 ```
 
 ### Package each application
@@ -123,7 +123,7 @@ At the time of writing, Service Fabric clusters must be deployed using the Azure
 To use the provided template:
 
 1. Open `ResourceManagement/cluster.parameters.json` and complete the fields `clusterLocation`, `adminUserName`, `adminPassword`, `sourceVaultValue`, `certificateUrlValue`, and `certificateThumbprint`. Field descriptions will describe how they should be completed.
-2. In `ResourceManagement/cluster.parameters.json`, change all instance of `sfmi-test` to a unique name, like `<myusername>-sfmi-test`. Also, change the values of `applicationDiagnosticsStorageAccountName` and `supportLogStorageAccountName` to be similarly unique, but without hyphens. This will help ensure the deployment resource names do not conflict with the names of other public resources.
+2. In `ResourceManagement/cluster.parameters.json`, change all instances of `sfmi-test` to a unique name, like `<myusername>-sfmi-test`. Also, change the values of `applicationDiagnosticsStorageAccountName` and `supportLogStorageAccountName` to be similarly unique, but without hyphens. This will help ensure the deployment resource names do not conflict with the names of other public resources.
 3. Start the deployment by running from your Powershell window in the `ResourceManagement` directory:
 ```powershell
 Connect-AzAccount
@@ -171,8 +171,8 @@ Once running on your cluster, the applications should each perform the same task
 
 Verify in a browser:
 
-1. Navigate to `http://<cluster name>.westus2.cloudapp.azure.com:19080/Explorer`.
-2. Present the certificate you created in your key vault. You'll need to download the certificate from the [Azure Portal](https://portal.azure.com/) at your vault's Certificates page, and [import it into your web browser](https://docs.digicert.com/manage-certificates/client-certificates-guide/manage-your-personal-id-certificate/windows-import-your-personal-id-certificate/google-chrome-import-your-personal-id/).
+1. Navigate to `http://<cluster name>.<location>.cloudapp.azure.com:19080/Explorer` (e.g. `http://sfmi-test.westus2.cloudapp.azure.com:19080/Explorer`).
+2. Present the certificate you created in your key vault. You'll need to download the certificate from the [Azure Portal](https://portal.azure.com/) from your vault's Certificates page and [import it into your web browser](https://docs.digicert.com/manage-certificates/client-certificates-guide/manage-your-personal-id-certificate/windows-import-your-personal-id-certificate/google-chrome-import-your-personal-id/).
 3. In the Explorer, you should see the applications running under the Applications tab. Otherwise, you may need to double check your deployment process.
 4. Under the Nodes tab, expand each node tab to see if it hosts an application ("fabric:/sfmitestsystem" or "fabric:/sfmitestuser").
 5. When you find an application entry, click the +-sign by the name to expand it. There should be a "code" entry -- click on that to bring up a page that has a "Container Logs" tab.
