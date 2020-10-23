@@ -4,6 +4,7 @@
     <ServiceManifestRef ServiceManifestName="sfmitestsystemfrontPkg" ServiceManifestVersion="1.0.0"/>
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code">
+      <RepositoryCredentials AccountName="<ACR_NAME>" Password="<found in Access keys page of registry in Portal>" PasswordEncrypted="false"/>
         <PortBinding ContainerPort="80" EndpointRef="sfmitestsystemfrontTypeEndpoint"/>
       </ContainerHostPolicies>
       <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="SystemAssigned" />

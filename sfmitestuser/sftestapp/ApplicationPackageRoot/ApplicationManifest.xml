@@ -4,6 +4,7 @@
     <ServiceManifestRef ServiceManifestName="sfmitestuserfrontPkg" ServiceManifestVersion="1.0.0"/>
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code">
+      <RepositoryCredentials AccountName="<ACR_NAME>" Password="<found in Access keys page of registry in Portal>" PasswordEncrypted="false"/>
         <PortBinding ContainerPort="443" EndpointRef="sfmitestuserfrontTypeEndpoint"/>
       </ContainerHostPolicies>
       <IdentityBindingPolicy ServiceIdentityRef="WebAdmin" ApplicationIdentityRef="AdminUser" />

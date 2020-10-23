@@ -10,7 +10,7 @@
   <CodePackage Name="code" Version="1.0.0">
     <EntryPoint>
       <ContainerHost>
-        <ImageName>{account name}/sfmitestsystem</ImageName>
+        <ImageName>{ACR_NAME}.azurecr.io/sfmitestsystem</ImageName>
         <Commands></Commands>
       </ContainerHost>
     </EntryPoint>

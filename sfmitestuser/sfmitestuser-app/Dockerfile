@@ -8,32 +8,17 @@ ARG PYTHON_VERSION=2.7
 FROM alpine/git as repo
 RUN git clone https://github.com/mccoyp/azure-sdk-for-python --single-branch --branch sfmi --depth 1 /azure-sdk-for-python
 
-# Use an official Python runtime as a base image
+
 FROM python:${PYTHON_VERSION}-slim
 
-# Set the working directory to /app
-WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-ADD . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
-
-# Install identity, core, and secrets
 COPY --from=repo /azure-sdk-for-python/sdk/identity /sdk/identity
 COPY --from=repo /azure-sdk-for-python/sdk/core/azure-core /sdk/core/azure-core
 COPY --from=repo /azure-sdk-for-python/sdk/keyvault/azure-keyvault-secrets /sdk/keyvault/azure-keyvault-secrets
 
-RUN pip install /sdk/identity/azure-identity
-RUN pip install /sdk/core/azure-core
-RUN pip install /sdk/keyvault/azure-keyvault-secrets
+WORKDIR /sdk/identity/azure-identity/tests/managed-identity-live
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 443 available to the world outside this container
-EXPOSE 443
+ENV AZURE_IDENTITY_TEST_VAULT_URL=<your vault URL>  # looks like https://<vault name>.vault.azure.net/
+ENV AZURE_IDENTITY_TEST_MANAGED_IDENTITY_CLIENT_ID=<AdminUser client ID>  # found in the managed identity overview
 
-# Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+CMD [ "pytest", "-rs", "-v", "--log-level=DEBUG" ]
