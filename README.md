@@ -1,10 +1,12 @@
-# Manual Testing for Service Fabric Applications using Managed Identity with Azure.Identity
+# Manual Testing for Service Fabric Applications using Managed Identity with Azure.Identity in Python
 
 Setup for a Service Fabric cluster and two apps, used for testing managed identity using Azure.Identity.
 
-`sfmitestsystem` and `sfmitestuser` are mock applications that use Azure.Identity's `ServiceFabricCredential` to request and verify Key Vault access tokens. The former application uses a system-assigned managed identity to do so, and the latter application uses a user-assigned managed identity.
+The `sfmitestsystem` and `sfmitestuser` directories contain mock applications that use Azure.Identity's `ServiceFabricCredential` to request and verify Key Vault access tokens. The former application uses a system-assigned managed identity to do so, and the latter application uses a user-assigned managed identity. Each application is set up using a Visual Studio project for basic scaffolding, a Docker image for running code, and an Azure resource template for deployment.
 
-The `ResourceManagement` directory contains Azure resource templates for creating a Service Fabric cluster to host these applications as well as the application templates.
+> **Note:** The code run by the applications comes from the `Dockerfile` in each, so adapting this sample to another language can be done by editing the Docker image each application uses. No other configuration changes are necessary if using Linux containers. To use Windows containers, you would need to edit the cluster configuration to run on Windows virtual machines (an example of a Windows configuration can be found [here](https://github.com/Azure/azure-quickstart-templates/tree/master/service-fabric-secure-cluster-5-node-1-nodetype)).
+
+The `arm_templates` directory contains Azure resource templates for creating a Service Fabric cluster to host these applications as well as the application templates.
 
 ## Environment Requirements
 
@@ -122,9 +124,9 @@ At the time of writing, Service Fabric clusters must be deployed using the Azure
 
 To use the provided template:
 
-1. Open `ResourceManagement/cluster.parameters.json` and complete the fields `clusterLocation`, `adminUserName`, `adminPassword`, `sourceVaultValue`, `certificateUrlValue`, and `certificateThumbprint`. Field descriptions will describe how they should be completed.
-2. In `ResourceManagement/cluster.parameters.json`, change all instances of `sfmi-test` to a unique name, like `<myusername>-sfmi-test`. Also, change the values of `applicationDiagnosticsStorageAccountName` and `supportLogStorageAccountName` to be similarly unique, but without hyphens. This will help ensure the deployment resource names do not conflict with the names of other public resources.
-3. Start the deployment by running from your Powershell window in the `ResourceManagement` directory:
+1. Open `arm_templates/cluster.parameters.json` and complete the fields `clusterLocation`, `adminUserName`, `adminPassword`, `sourceVaultValue`, `certificateUrlValue`, and `certificateThumbprint`. Field descriptions will describe how they should be completed.
+2. In `arm_templates/cluster.parameters.json`, change all instances of `sfmi-test` to a unique name, like `<myusername>-sfmi-test`. Also, change the values of `applicationDiagnosticsStorageAccountName` and `supportLogStorageAccountName` to be similarly unique, but without hyphens. This will help ensure the deployment resource names do not conflict with the names of other public resources.
+3. Start the deployment by running from your Powershell window in the `arm_templates` directory:
 ```powershell
 Connect-AzAccount
 Select-AzSubscription -Subscription $Subscription
@@ -145,9 +147,9 @@ This sample also provides templates for deploying Service Fabric applications wi
 
 To use the provided templates:
 
-1. Open `ResourceManagement/sfmitestsystem.parameters.json` and complete the fields `clusterName`, `clusterLocation`, and `applicationPackageUrl`. `clusterName` and `clusterLocation` should match the name and location of the cluster you deployed earlier in the walkthrough. `applicationPackageUrl` is the URL of the `.sfpkg` you uploaded to a storage account in the previous step. To find the URL, click on `sfmitestsystem.sfpkg` in the Portal to view its properties.
-2. Open `ResourceManagement/sfmitestuser.parameters.json` and complete the same fields, using the URL of `sfmitestuser.sfpkg` for `applicationPackageUrl`.
-3. Start the deployment by running from your Powershell window in the `ResourceManagement` directory:
+1. Open `arm_templates/sfmitestsystem.parameters.json` and complete the fields `clusterName`, `clusterLocation`, and `applicationPackageUrl`. `clusterName` and `clusterLocation` should match the name and location of the cluster you deployed earlier in the walkthrough. `applicationPackageUrl` is the URL of the `.sfpkg` you uploaded to a storage account in the previous step. To find the URL, click on `sfmitestsystem.sfpkg` in the Portal to view its properties.
+2. Open `arm_templates/sfmitestuser.parameters.json` and complete the same fields, using the URL of `sfmitestuser.sfpkg` for `applicationPackageUrl`.
+3. Start the deployment by running from your Powershell window in the `arm_templates` directory:
 ```powershell
 New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestsystem.parameters.json" -TemplateFile ".\sfmitestsystem.template.json" -ResourceGroupName $ResourceGroupName
 New-AzResourceGroupDeployment -TemplateParameterFile ".\sfmitestuser.parameters.json" -TemplateFile ".\sfmitestuser.template.json" -ResourceGroupName $ResourceGroupName
