@@ -46,7 +46,9 @@ az keyvault create -g $RESOURCE_GROUP -n $KEY_VAULT_NAME --sku standard
 
 After creating the vault, create a self-signed certificate in it using the [Azure Portal](https://azure.portal.com/). You'll need to insert some of this certificate's properties into the cluster template later on.
 
-Finally, create a secret in the key vault. It can have any name (e.g. "TestSecret") and any value (e.g. "TestValue"). This secret will just be accessed by the Service Fabric applications to verify that they can access a resource and read contents using their identities.
+Next, create a secret in the key vault. It can have any name (e.g. "TestSecret") and any value (e.g. "TestValue"). This secret will just be accessed by the Service Fabric applications to verify that they can access a resource and read contents using their identities.
+
+Finally, go to the "Access policies" blade for your vault. Under "Enable Access to:", check the boxes for "Azure Virtual Machines for deployment" and "Azure Resource Manager for template deployment". Be sure to click "Save" at the top of the page. These policies are necessary for your cluster deployment and applications' functionality.
 
 ### Create an Azure Container Registry
 
