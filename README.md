@@ -25,7 +25,7 @@ The `arm_templates` directory contains Azure resource templates for creating a S
 From a command prompt window, run
 ```
 az login
-az group create -n $RESOURCE_GROUP --location $LOCATION
+az group create -n $RESOURCE_GROUP --location $LOCATION --subscription $SUBSCRIPTION_NAME
 ```
 
 ### Create a user-assigned managed identity
