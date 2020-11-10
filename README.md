@@ -27,7 +27,7 @@ cd service-fabric-managed-identity-test
 
 ## Azure Resource Setup
 
-You can skip to [Set Up and Deploy the Applications](#set-up-and-deploy-the-applications) if you have an existing Service Fabric cluster, managed identity, key vault, storage account, and container registry.
+You can skip to [Set Up and Deploy the Applications](#set-up-and-deploy-the-applications) if you have an existing Service Fabric cluster, key vault, storage account, container registry, and managed identity named "AdminUser".
 
 ### Create a resource group
 
