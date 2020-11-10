@@ -96,12 +96,12 @@ For this manual test, each application will use a Docker image to run managed id
 
 First, you'll need to update the applications to target the correct resources.
 
-1. Open `sfmitestsystem/sfmitestsystem-app/Dockerfile`.
+1. Open `sfmitestsystem/Dockerfile`.
 2. Replace `<your vault URL>` with the vault URI of your key vault.
 ```Dockerfile
 ENV AZURE_IDENTITY_TEST_VAULT_URL=<your vault URL>  # looks like https://<vault name>.vault.azure.net/
 ```
-3. Open `sfmitestuser/sfmitestuser-app/Dockerfile`.
+3. Open `sfmitestuser/Dockerfile`.
 4. Replace `<your vault URL>` with the vault URI of your key vault, and replace `<AdminUser client ID>` with the client ID of your managed identity.
 ```Dockerfile
 ENV AZURE_IDENTITY_TEST_VAULT_URL=<your vault URL>  # looks like https://<vault name>.vault.azure.net/
@@ -117,8 +117,8 @@ az acr login -n $ACR_NAME
 ```
 3. Build the images:
 ```
-docker build --no-cache -t $ACR_NAME.azurecr.io/sfmitestsystem sfmitestsystem/sfmitestsystem-app
-docker build --no-cache -t $ACR_NAME.azurecr.io/sfmitestuser sfmitestuser/sfmitestuser-app
+docker build --no-cache -t $ACR_NAME.azurecr.io/sfmitestsystem sfmitestsystem
+docker build --no-cache -t $ACR_NAME.azurecr.io/sfmitestuser sfmitestuser
 ```
 4. Publish the images:
 ```
