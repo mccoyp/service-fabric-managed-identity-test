@@ -25,7 +25,12 @@ git clone https://github.com/mccoyp/service-fabric-managed-identity-test.git
 cd service-fabric-managed-identity-test
 ```
 
-## Azure Resource Setup
+### Sections
+- [Resource setup](#set-up-resources)
+- [Application deployment](#set-up-and-deploy-the-applications)
+- [Test validation](#run-the-tests)
+
+## Set Up Resources
 
 You can skip to [Set Up and Deploy the Applications](#set-up-and-deploy-the-applications) if you have an existing Service Fabric cluster, key vault, storage account, container registry, and managed identity named "AdminUser".
 
